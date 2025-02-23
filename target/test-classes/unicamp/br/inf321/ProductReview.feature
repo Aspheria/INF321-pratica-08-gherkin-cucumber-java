@@ -9,7 +9,6 @@ Feature: Product Review API Multi Bags
       | password | aA#123456789         |
 
   Scenario: Review realizada com sucesso
-    Given se Jhon possui review para o produto 4 ele é removido
     When o usuário envia um POST para a URL "/api/v1/auth/products/4/reviews" com os seguintes dados:
       | customerId | 654              |
       | date       | 2025-01-18       |
