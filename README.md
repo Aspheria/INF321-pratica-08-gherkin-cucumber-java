@@ -1,6 +1,6 @@
 **# Objetivo**  
 Aplicar o uso do **Gherkin** com **Cucumber** e utilizar a ferramenta **RestAssured** para automatizar os cenários de teste escritos em **Gherkin** para **APIs de Product Review** do **Multibags**, que foram escritos no **Lab anterior**.
-
+https://docs.google.com/document/d/1KZM5Fn9J5aL71fjhdGDjuZcpDFimxfw_1lVqZKEJHII/edit?usp=drive_web&ouid=104014092906899062183
 ---
 
 **# Passos Iniciais**  
