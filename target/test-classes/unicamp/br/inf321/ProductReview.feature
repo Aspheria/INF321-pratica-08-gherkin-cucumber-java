@@ -19,31 +19,35 @@ Feature: Product Review API Multi Bags
     Then o response status code deve ser 201 Created
     And o response body deve conter o ID do review criado
 
-  Scenario: Tentativa de criar um review com rating inválido
-    When o usuário envia um novo review para o produto com ID "12345" com rating 6 e comentário "Great product!"
-    Then o response status code deve ser 400 Bad Request
-    And o response body deve conter o erro "Rating must be between 1 and 5"
+  Scenario: Excluir um review existente com sucesso
+    Given que o usuário está autenticado e possui um token válido
+    And que o usuário já criou um review para o produto "123" com reviewId "456"
+    When o usuário envia uma requisição DELETE para "/api/v1/auth/products/123/reviews/456"
+    Then a resposta deve conter o status 204 No Content
+    And o review deve ser removido do sistema
 
-  Scenario: Obter reviews para um produto existente
-    Given o produto com ID "12345" possui reviews
-    When o usuário solicita as reviews do produto com ID "12345"
-    Then o response status code deve ser 200 OK
-    And o response body deve conter a lista de reviews
+  Scenario: Tentar excluir um review sem autenticação
+    Given que o usuário não está autenticado
+    When o usuário envia uma requisição DELETE para "/api/v1/auth/products/123/reviews/456"
+    Then a resposta deve conter o status 401 Unauthorized
+    And a mensagem de erro deve indicar "Unauthorized"
 
-  Scenario: Obter review de um produto inexistente
-    When o usuário envia uma requisição de review para o produto com ID "99999"
-    Then o response status code deve ser 404 Not Found
-    And o response body deve conter o erro "Product not found"
+  Scenario: Excluir um review inexistente
+    Given que o usuário está autenticado e possui um token válido
+    When o usuário envia uma requisição DELETE para "/api/v1/auth/products/123/reviews/999999"
+    Then a resposta deve conter o status 404 Not Found
+    And a mensagem de erro deve indicar "Review not found"
 
-  Scenario: Criar um review para um produto já avaliado pelo usuário
-    Given o usuário já criou um review para o produto com ID "123"
-    When o usuário tenta criar um novo review para o mesmo produto
-    Then o response status code deve ser 400 Bad Request
-    And o response body deve conter o erro "You have evaluated this product"
+  Scenario: Excluir um review de outro usuário
+    Given que o usuário está autenticado e possui um token válido
+    And que o review com ID "456" pertence a outro usuário
+    When o usuário envia uma requisição DELETE para "/api/v1/auth/products/123/reviews/456"
+    Then a resposta deve conter o status 403 Forbidden
+    And a mensagem de erro deve indicar "Forbidden"
 
-  Scenario: Criar um novo review após excluir o review anterior
-    Given o usuário já criou um review para o produto com ID "123"
-    And o usuário excluiu o review existente
-    When o usuário envia uma requisição POST para "/api/v1/auth/products/123/reviews" com um novo review válido
-    Then o response status code deve ser 201 Created
-    And o novo review deve ser salvo no sistema
+  Scenario: Excluir um review antes de criar um novo
+    Given que o usuário já possui um review para o produto "123"
+    When o usuário envia uma requisição DELETE para "/api/v1/auth/products/123/reviews/456"
+    Then a resposta deve conter o status 204 No Content
+    And o review deve ser removido do sistema
+    And o usuário pode criar um novo review para o produto "123"

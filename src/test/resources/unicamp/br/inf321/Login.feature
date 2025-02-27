@@ -3,6 +3,8 @@ Feature: Login
   July wants to login on the application
   So she can buy new products
 
+
+
   Scenario: Login with valid credentials
     Given July is registered on the multibags website
     When she logins with her credentials
