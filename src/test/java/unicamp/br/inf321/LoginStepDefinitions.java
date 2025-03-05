@@ -15,6 +15,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class LoginStepDefinitions {
     private final CucumberWorld cucumberWorld;
@@ -24,6 +25,9 @@ public class LoginStepDefinitions {
     }
 
     boolean isJWT(String jwt) {
+        if (jwt == null || jwt.isEmpty())
+            return false;
+
         String[] jwtSplitted = jwt.split("\\.");
         if (jwtSplitted.length != 3) // The JWT is composed of three parts
             return false;
@@ -34,8 +38,9 @@ public class LoginStepDefinitions {
                 return false;
             String jsonSecondPart = new String(Base64.getDecoder().decode(jwtSplitted[1]));
             JSONObject secondPart = new JSONObject(jsonSecondPart); // The first part of the JWT is a JSON
-            //Put the validations you think are necessary for the data the JWT should take to validate
-        }catch (JSONException err){
+            // Put the validations you think are necessary for the data the JWT should take
+            // to validate
+        } catch (JSONException err) {
             return false;
         }
         return true;
@@ -45,8 +50,7 @@ public class LoginStepDefinitions {
     public void isRegisteredOnTheMultibagsWebsite() {
         this.cucumberWorld.setRequest(given().log().all().baseUri("http://multibags.1dt.com.br")
                 .contentType(ContentType.JSON.toString())
-                .accept(ContentType.JSON.toString())
-        );
+                .accept(ContentType.JSON.toString()));
     }
 
     @When("she logins with her credentials")
@@ -66,7 +70,8 @@ public class LoginStepDefinitions {
         String token = cucumberWorld.getResponse().then().log().all().assertThat()
                 // validates status code
                 .statusCode(HttpStatus.SC_OK)
-                // validates JSON schema (JSON schema generated using https://www.jsonschema.net/app/schemas/377249)
+                // validates JSON schema (JSON schema generated using
+                // https://www.jsonschema.net/app/schemas/377249)
                 .body(matchesJsonSchemaInClasspath("unicamp/br/inf321/LoginJsonSchema.json"))
                 // assert response body contents
                 .onFailMessage("token should not be empty")
@@ -84,5 +89,11 @@ public class LoginStepDefinitions {
         isRegisteredOnTheMultibagsWebsite();
         loginsWithValidCredentials(table);
         shouldBeLoggedWithSuccess();
+    }
+
+    @Given("there is no logged user on the multibags application")
+    public void thereIsNoLoggedUser() {
+        String token = cucumberWorld.getFromNotes("token");
+        assertFalse(isJWT(token), "should be no jwt token");
     }
 }
