@@ -77,19 +77,12 @@ public class UpdateProductRatingStepDefinitions {
             throws JsonProcessingException {
         String token = cucumberWorld.getFromNotes("token");
 
-        if (token == null) {
-            cucumberWorld.addToNotes(token, "Invalid token");
-        }
-
         JSONObject requestBody = new JSONObject();
         requestBody.put("customerId", Integer.parseInt(table.get("customerId")));
         requestBody.put("date", table.get("date"));
         requestBody.put("description", table.get("description"));
         requestBody.put("language", table.get("language"));
         requestBody.put("rating", Integer.parseInt(table.get("rating")));
-
-        System.out.println(token);
-        System.out.println(cucumberWorld.getRequest());
 
         cucumberWorld.setResponse(cucumberWorld.getRequest()
                 .header("Authorization", "Bearer " + token)
