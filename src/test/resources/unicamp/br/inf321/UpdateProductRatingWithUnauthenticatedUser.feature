@@ -1,5 +1,8 @@
 Feature: Atualização de Avaliações de Produtos (não autenticado)
 
+  Background:
+    Given Helio opens the multibags application
+
   Scenario: Tentar atualizar um review sem autenticação
     When o usuário envia uma requisição PUT para "/api/v1/auth/products/9/reviews/1084" com os seguintes dados:
       | customerId  |                                         752 |

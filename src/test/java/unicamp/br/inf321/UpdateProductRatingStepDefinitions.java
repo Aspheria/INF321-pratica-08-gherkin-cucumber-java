@@ -9,7 +9,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -84,12 +83,19 @@ public class UpdateProductRatingStepDefinitions {
         requestBody.put("language", table.get("language"));
         requestBody.put("rating", Integer.parseInt(table.get("rating")));
 
+        if (token == null) {
+            cucumberWorld.setResponse(cucumberWorld.getRequest()
+                    .header("Content-Type", "application/json")
+                    .body(requestBody.toString())
+                    .put(url));
+            return;
+        }
+
         cucumberWorld.setResponse(cucumberWorld.getRequest()
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "application/json")
                 .body(requestBody.toString())
                 .put(url));
-
     }
 
     @Then("a resposta deve conter o status {int} OK")
