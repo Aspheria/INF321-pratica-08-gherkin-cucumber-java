@@ -68,7 +68,8 @@ public class ConsultaAvalicaoProdutos {
 
     @Given("que o usuário não está autenticado")
     public void queOUsuarioNaoEstaAutenticado() {
-        // Não é necessário configurar nada, apenas não incluir o token de autenticação na requisição
+        // Não é necessário configurar nada, apenas não incluir o token de autenticação
+        // na requisição
     }
 
     @Given("que o usuário está autenticado e possui um token válidoo")
@@ -113,6 +114,8 @@ public class ConsultaAvalicaoProdutos {
             // Simular erro 500 para o cenário de sistema instável
             cucumberWorld.addToNotes("forceError", "500");
         }
+
+        System.out.println(token);
 
         if (token == null) {
             cucumberWorld.setResponse(cucumberWorld.getRequest()
@@ -162,13 +165,13 @@ public class ConsultaAvalicaoProdutos {
         // Verificar se os campos essenciais estão presentes em cada avaliação
         for (Map<String, Object> review : reviews) {
             assertThat("Review deve conter ID", review.containsKey("id"));
-            assertThat("Review deve conter customerId", review.containsKey("customerId"));
+            assertThat("Review deve conter customer", review.containsKey("customer"));
             assertThat("Review deve conter rating", review.containsKey("rating"));
         }
     }
 
-    @And("a mensagem de erro deve indicarr {string}")
-    public void aMensagemDeErroDeveIndicarr(String errorMessage) {
+    @And("a mensagem de erro deve indicar {string}")
+    public void aMensagemDeErroDeveIndicar(String errorMessage) {
         String responseBody = cucumberWorld.getResponse().getBody().asString();
         assertThat(responseBody, containsString(errorMessage));
     }

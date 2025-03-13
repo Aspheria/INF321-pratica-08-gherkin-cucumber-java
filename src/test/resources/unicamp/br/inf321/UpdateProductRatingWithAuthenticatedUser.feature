@@ -1,4 +1,4 @@
-#Feature: Atualização de Avaliações de Produtos (autenticado)
+Feature: Atualização de Avaliações de Produtos (autenticado)
 
   Background:
     Given Helio is logged on the multibags application

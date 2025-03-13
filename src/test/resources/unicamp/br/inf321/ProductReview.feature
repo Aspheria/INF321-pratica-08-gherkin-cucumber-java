@@ -1,5 +1,5 @@
-#@review
-#Feature: Product Review API Multi Bags
+@review
+Feature: Product Review API Multi Bags
   As a multibags customer user
   July wants to review a product
   So she can review any product
@@ -11,12 +11,12 @@
 
   Scenario: Review realizada com sucesso
     When o usuário envia um POST para a URL "/api/v1/auth/products/4/reviews" com os seguintes dados:
-      | customerId | 654              |
-      | date       | 2025-01-18       |
-      | description| Excelente teste! |
-      | language   | en               |
-      | rating     | 5                |
-      | productId  | 4                |
+      | customerId  |              654 |
+      | date        |       2025-01-18 |
+      | description | Excelente teste! |
+      | language    | en               |
+      | rating      |                5 |
+      | productId   |                4 |
     Then o response status code deve ser 201 Created
     And o response body deve conter o ID do review criado
 

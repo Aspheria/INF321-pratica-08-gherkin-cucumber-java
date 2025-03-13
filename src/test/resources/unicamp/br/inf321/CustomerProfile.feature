@@ -1,4 +1,4 @@
-#Feature: Customer Profile
+Feature: Customer Profile
   As a multibags customer user
   Jhon wants to see his profile
   So he can check any outdated information
