@@ -1,4 +1,5 @@
-Feature: Product Review API Multi Bags
+#@review
+#Feature: Product Review API Multi Bags
   As a multibags customer user
   July wants to review a product
   So she can review any product

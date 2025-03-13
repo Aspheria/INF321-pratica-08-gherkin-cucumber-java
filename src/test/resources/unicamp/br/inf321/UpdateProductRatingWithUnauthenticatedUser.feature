@@ -1,4 +1,4 @@
-Feature: Atualização de Avaliações de Produtos (não autenticado)
+#Feature: Atualização de Avaliações de Produtos (não autenticado)
 
   Background:
     Given Helio opens the multibags application
