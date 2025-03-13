@@ -18,7 +18,7 @@ Feature: Consulta de avaliação de produtos
     And a mensagem de erro deve indicar "Unauthorized"
 
   Scenario: Obter avaliações de um produto inexistente
-    Given que o usuário está autenticado e possui um token válido
+    Given que o usuário está autenticado e possui um token válidos
     When o usuário envia uma requisição GET para "/api/v1/products/999999/reviews"
     Then a resposta deve conter o status 404 Not Found
     And a mensagem de erro deve indicar "Product not found"

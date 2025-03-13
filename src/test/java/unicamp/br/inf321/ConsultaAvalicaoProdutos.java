@@ -22,6 +22,28 @@ public class ConsultaAvalicaoProdutos {
         this.cucumberWorld = cucumberWorld;
     }
 
+    @Given("Helio está logado na aplicação multibags")
+    public void helio_está_logado_na_aplicação_multibags(io.cucumber.datatable.DataTable dataTable) {
+        // Extraindo os dados da tabela
+        List<Map<String, String>> dados = dataTable.asMaps(String.class, String.class);
+        String username = dados.get(0).get("username");
+        String password = dados.get(0).get("password");
+
+        // Simulando o login e obtendo o token
+        cucumberWorld.setResponse(cucumberWorld.getRequest()
+                .header("Content-Type", "application/json")
+                .body("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}")
+                .post("/api/v1/auth/login"));
+
+        // Armazenando o token nas notas
+        String token = cucumberWorld.getResponse().getBody().jsonPath().getString("token");
+        cucumberWorld.addToNotes("token", token);
+
+        // Verificando se o login foi bem-sucedido
+        cucumberWorld.getResponse().then()
+                .statusCode(HttpStatus.SC_OK);
+    }
+
     @Given("que existem avaliações para o produto {string}")
     public void queExistemAvaliacoesParaOProduto(String productId) {
         String token = cucumberWorld.getFromNotes("token");
@@ -49,8 +71,8 @@ public class ConsultaAvalicaoProdutos {
         // Não é necessário configurar nada, apenas não incluir o token de autenticação na requisição
     }
 
-    @Given("que o usuário está autenticado e possui um token válido")
-    public void queOUsuarioEstaAutenticadoEPossuiUmTokenValido() {
+    @Given("que o usuário está autenticado e possui um token válidoo")
+    public void queOUsuarioEstaAutenticadoEPossuiUmTokenValidoo() {
         // Verificar se o token existe nas notas
         String token = cucumberWorld.getFromNotes("token");
         assertThat("Token deve existir", token, notNullValue());
@@ -105,50 +127,54 @@ public class ConsultaAvalicaoProdutos {
                 .get(url));
     }
 
-    @Then("a resposta deve conter o status {int} OK")
-    public void aRespostaDeveConterOStatusOK(int statusCode) {
+    @Then("a resposta deve conter o status {int} OKk")
+    public void aRespostaDeveConterOStatusOKk(int statusCode) {
         cucumberWorld.getResponse().then()
                 .statusCode(statusCode);
     }
 
-    @Then("a resposta deve conter o status {int} Unauthorized")
-    public void aRespostaDeveConterOStatusUnauthorized(int statusCode) {
+    @Then("a resposta deve conter o status {int} Unauthorizedd")
+    public void aRespostaDeveConterOStatusUnauthorizedd(int statusCode) {
         cucumberWorld.getResponse().then()
                 .statusCode(statusCode);
     }
 
-    @Then("a resposta deve conter o status {int} Not Found")
-    public void aRespostaDeveConterOStatusNotFound(int statusCode) {
+    @Then("a resposta deve conter o status {int} Not Foundd")
+    public void aRespostaDeveConterOStatusNotFoundd(int statusCode) {
         cucumberWorld.getResponse().then()
                 .statusCode(statusCode);
     }
 
-    @Then("a resposta deve conter o status {int} Internal Server Error")
-    public void aRespostaDeveConterOStatusInternalServerError(int statusCode) {
+    @Then("a resposta deve conter o status {int} Internal Server Errorr")
+    public void aRespostaDeveConterOStatusInternalServerErrorr(int statusCode) {
         cucumberWorld.getResponse().then()
                 .statusCode(statusCode);
     }
 
-    @And("a lista de avaliações deve ser retornada")
-    public void aListaDeAvaliacoesDeveSerRetornada() {
+    @Then("a lista de avaliações deve ser retornada")
+    public void a_lista_de_avaliações_deve_ser_retornada() {
+        // Obter a lista de avaliações do corpo da resposta
         List<Map<String, Object>> reviews = cucumberWorld.getResponse().getBody().jsonPath().getList("$");
-        assertThat("A lista de avaliações não deve ser vazia", reviews.size() > 0);
 
-        // Verificar se os campos essenciais estão presentes
-        Map<String, Object> firstReview = reviews.get(0);
-        assertThat("Review deve conter ID", firstReview.containsKey("id"));
-        assertThat("Review deve conter customerId", firstReview.containsKey("customerId"));
-        assertThat("Review deve conter rating", firstReview.containsKey("rating"));
+        // Verificar se a lista não está vazia
+        assertThat("A lista de avaliações não deve ser vazia", reviews.size(), greaterThan(0));
+
+        // Verificar se os campos essenciais estão presentes em cada avaliação
+        for (Map<String, Object> review : reviews) {
+            assertThat("Review deve conter ID", review.containsKey("id"));
+            assertThat("Review deve conter customerId", review.containsKey("customerId"));
+            assertThat("Review deve conter rating", review.containsKey("rating"));
+        }
     }
 
-    @And("a mensagem de erro deve indicar {string}")
-    public void aMensagemDeErroDeveIndicar(String errorMessage) {
+    @And("a mensagem de erro deve indicarr {string}")
+    public void aMensagemDeErroDeveIndicarr(String errorMessage) {
         String responseBody = cucumberWorld.getResponse().getBody().asString();
         assertThat(responseBody, containsString(errorMessage));
     }
 
-    @And("a lista de avaliações deve conter apenas um review por usuário")
-    public void aListaDeAvaliacoesDeveConterApenasUmReviewPorUsuario() {
+    @And("a lista de avaliações deve conter apenas um review por usuáripo")
+    public void aListaDeAvaliacoesDeveConterApenasUmReviewPorUsuarioo() {
         List<Map<String, Object>> reviews = cucumberWorld.getResponse().getBody().jsonPath().getList("$");
 
         // Extrair IDs de clientes
